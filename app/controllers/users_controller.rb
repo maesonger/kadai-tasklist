@@ -1,8 +1,15 @@
 class UsersController < ApplicationController
   
   before_action :require_user_logged_in, only: [:index, :show]
+  before_action :search,only: [:index, :show]
   
-  def index
+  private
+  
+  def search
+    @user = User.find(params[:id])
+    if @user != current_user
+      redirect_to root_url   
+    end
   end
 
   def show
@@ -31,4 +38,6 @@ class UsersController < ApplicationController
     
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
   end
+  
+  
 end
