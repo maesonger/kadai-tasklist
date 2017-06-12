@@ -3,14 +3,6 @@ class UsersController < ApplicationController
   before_action :require_user_logged_in, only: [:index, :show]
   before_action :search,only: [:index, :show]
   
-  private
-  
-  def search
-    @user = User.find(params[:id])
-    if @user != current_user
-      redirect_to root_url   
-    end
-  end
 
   def show
     @user = User.find(params[:id])
@@ -25,7 +17,8 @@ class UsersController < ApplicationController
 
     if @user.save
       flash[:success] = 'ユーザを登録しました。'
-      redirect_to @user
+      redirect_to root_url
+      
     else
       flash.now[:danger] = 'ユーザの登録に失敗しました。'
       render :new
@@ -37,7 +30,15 @@ class UsersController < ApplicationController
   def user_params
     
     params.require(:user).permit(:name, :email, :password, :password_confirmation)
+    
   end
   
+
+  def search
+    @user = User.find(params[:id])
+    if @user != current_user
+      redirect_to @user
+    end
+  end
   
 end
